@@ -1,0 +1,102 @@
+
+{% extends "base.html" %}
+{% load static %}
+{% block style %}
+<link href="{% static 'users/css/Style.css' %}" rel="stylesheet">
+{% endblock style %}
+{% block content %}
+<div class="forms-table card bg-light mb-3">
+  <div class="card-header panel-header">
+    <div>Жадваллар</div>
+    <a class="btn btn-primary" href="{% url 'one-table-generator' %}">Жадвал яратиш</a>
+  </div>
+  <div class="card-body">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+              <th scope="col">id</th>
+              <th scope="col">Номи</th>
+              <th scope="col">Тавсифи</th>
+              <th scope="col">Яратилган сана</th>
+              <th scope="col">Ҳолат</th>
+              <th scope="col">Асбоблар</th>
+            </tr>
+          </thead>
+          <tbody>
+          {% for el in table %}
+            <tr>
+              <th scope="row">{{ el.id }}</th>
+              <td>{{ el.name }}</td>
+              <td style="max-width: 20em">{{ el.description }}</td>
+              <td>{{ el.created }}</td>
+              <td><span class="badge rounded-pill {{ el.status_color }}">{{ el.status }}</span></td>
+              <td>
+                <form>
+                   {% csrf_token %}
+                  <button formaction="{% url 'one-table-show' %}" formmethod="get" type="submit" class="btn btn-outline-primary" name="val" value="{{ el.id }}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-table" viewBox="0 0 16 16">
+                      <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm15 2h-4v3h4V4zm0 4h-4v3h4V8zm0 4h-4v3h3a1 1 0 0 0 1-1v-2zm-5 3v-3H6v3h4zm-5 0v-3H1v2a1 1 0 0 0 1 1h3zm-4-4h4V8H1v3zm0-4h4V4H1v3zm5-3v3h4V4H6zm4 4H6v3h4V8z"/>
+                    </svg>
+                    Кўриш
+                  </button>
+                  <button formaction="{% url 'one-table-edit' %}" formmethod="get" type="submit" class="btn btn-outline-secondary" name="val" value="{{ el.id }}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
+                      <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
+                    </svg>
+                    Нусха кўчириш
+                  </button>
+                  <button type="button" class="btn btn-outline-danger delet-btn" name="val" value="{{ el.id }}" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
+                      <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
+                    </svg>
+                    Ўчириш
+                  </button>
+                </form>
+              </td>
+            </tr>
+          {% endfor %}
+          </tbody>
+    </table>
+  </div>
+</div>
+
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Ўчириш</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Ҳақиқатан ҳам оʻчириб ташламоқчимисиз?<br>
+        Кейин қайта тиклай олмайсиз.
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Ёпиш</button>
+        <form>
+         {% csrf_token %}
+          <button formaction="{% url 'one-table-delite' %}" formmethod="post" type="submit" class="btn btn-outline-danger delet-btn-final" name="val">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
+              <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
+            </svg>
+            Ўчириш
+          </button>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+{% endblock content %}
+
+{% block script %}
+<script type="text/javascript" src="{% static 'tableapp/js/table_list_btn.js' %}"></script>
+{% endblock script %}
+

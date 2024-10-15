@@ -1,0 +1,9 @@
+.panel-header{
+    display: flex;
+    justify-content: space-between;
+}
+.user-add-card{
+    margin:50px;
+    margin-left:25%;
+    width:50%;
+}

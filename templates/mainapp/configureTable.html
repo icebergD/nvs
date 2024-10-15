@@ -1,0 +1,67 @@
+
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+
+
+
+
+
+<div class="forms-table card bg-light mb-3">
+  <div class="card-header">Рухсат бериш</div>
+  <div class="card-body">
+      <form action="configure-table" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="table_id" value="{{ table_id }}">
+        <div class="form-group multiple_select" id="multiSelect1">
+          <div class="box">
+            <div class="search_box">
+              <label for="left_search_box">Танланмаган</label>
+              <input type="text" placeholder="Қидирмоқ" class="left_search_box">
+            </div>
+            <div class="option_container">
+              <select name="data_left[]" class="form-control data_left select-box " multiple="">
+                {% for el in left %}
+                <option value="{{ el.id }}">{{ el.first_name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+          <div class="box_buttons" id="buttonsBox">
+            <input type="submit" value=">>" class="moveAllToRight">
+            <input type="submit" value=">" class="moveSelectedToRight">
+            <input type="submit" value="<" class="moveSelectedToLeft">
+            <input type="submit" value="<<" class="moveAllToLeft">
+          </div>
+          <div class="box right_box">
+            <div class="search_box">
+              <label for="searchToOptions">Танланган</label>
+              <input type="text" class="right_search_box" placeholder="Қидирмоқ">
+            </div>
+            <div class="option_container">
+              <select name="data_right[]" class="form-control data_right select-box" multiple="">
+                {% for el in right %}
+                <option value="{{ el.id }}">{{ el.first_name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="d-grid gap-2 col-6 mx-auto mt-3">
+          <button class="btn btn-outline-primary" type="submit">Сақлаш</button>
+        </div>
+
+
+      </form>
+
+  </div>
+</div>
+
+
+
+{% endblock content %}
+{% block script %}
+<script type="text/javascript" src="{% static 'mainapp/js/configureTable.js' %}"></script>
+{% endblock script %}

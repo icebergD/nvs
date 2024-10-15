@@ -1,0 +1,32 @@
+
+{% extends "base.html" %}
+{% load static %}
+{% block style %}
+
+<link href="{% static 'users/css/Style.css' %}" rel="stylesheet">
+{% endblock style %}
+{% block content %}
+
+<div class="card user-add-card">
+  <div class="card-header">
+    Фойдаланувчи
+  </div>
+  <div class="card-body">
+    <form action="/users/user-add" method="post">
+     {% for field in user_form %}
+         <div class="mb-3">
+            {{ field.label_tag }}
+            {{ field }}
+            <div class="form-text">{{ field.help_text }} {{ field.errors }}</div>
+         </div>
+     {% endfor %}
+     {% csrf_token %}
+  <button type="submit" class="btn btn-primary">Яратиш</button>
+</form>
+  </div>
+</div>
+
+
+
+{% endblock content %}
+

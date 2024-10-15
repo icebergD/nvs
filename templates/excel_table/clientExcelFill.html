@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+{% load static %}
+{% block style %}
+
+<link href="{% static 'excel_table/css/style.css' %}" rel="stylesheet" type="text/css">
+{% endblock style %}
+{% block content %}
+
+  <div class="tabs-line">
+    <div class="tabs-buttons">
+        {% for el in sheets %}
+        <button data-tab-id="{{ el.id }}" class=" tablink {% if el.sheet_name == active_sheet %} chosen-tab {% endif %}" onclick="openTab(event,'{{ el.id }}')">{{ el.sheet_name }}</button>
+        {% endfor %}
+    </div>
+
+    <button type="button" class="btn btn-primary btn-sm save-btn">Сақлаш</button>
+  </div>
+  <div class="tabs-bufer"></div>
+  <div class="scrollbar-table"><div class="scrollbar-content"></div></div>
+  <div class="tab-body-wrap">
+  {% for sheet_el in sheets %}
+
+      <div id="{{ sheet_el.id }}"  {% if sheet_el.sheet_name != active_sheet %} class="tab-body" style="display:none" {% else %} class="chosen-tab-body tab-body" {% endif %}>
+
+          <table>
+            <thead>
+                <tr>
+                    <th class="cells__spacer"></th>
+                    {% for el in sheet_el.char_line %}
+<!--                    width="{{ el.col_width }}pt"-->
+                    <th style="width:{{ el.col_width }}pt" class="cells__alphabet">{{ el.col_value }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in sheet_el.sheet %}
+                    <tr>
+                      {% for cell in row %}
+
+                        {% if cell.exists == True %}
+<!--                        height="{{ el.row_height }}pt"-->
+                        <th class="cells__number"><div style="height:{{ el.row_height }}pt">{{ cell.row_value }}</div></th>
+                        {% else %}
+                            {% if cell.visable == True %}
+                              <td
+                                      data-row="{{cell.row}}"
+                                      data-col="{{cell.col}}"
+                                      class="cell"
+                                      rowspan="{{ cell.rowspan }}"
+                                      colspan="{{ cell.colspan }}"
+                                      data-visable="{{cell.visable}}"
+                                      style="
+                                            background:{{ cell.background_color }};
+                                            border-top: solid {{cell.border_top}}px {{cell.border_top_color}};
+                                            border-right: solid {{cell.border_right}}px {{cell.border_right_color}};
+                                            border-bottom: solid {{cell.border_bottom}}px {{cell.border_bottom_color}};
+                                            border-left: solid {{cell.border_left}}px {{cell.border_left_color}};
+                                            font-family: {{ cell.font_name }}, Times, serif;
+                                            font-size: {{ cell.font_size }}px;
+                                            color: {{ cell.font_color }};
+                                            {% if cell.font_bold == True %}
+                                                font-weight: bold;
+                                            {% endif %}
+                                            {% if cell.font_italic == True %}
+                                                font-style: italic;
+                                            {% endif %}
+                                            text-align: {{ cell.horizontal_align }};
+                                            vertical-align: {{ cell.vertical_align }};
+<!--                                            {% if cell.wrap_text == True %}-->
+<!--                                                overflow: visible;-->
+<!--                                            {% endif %}-->
+                                            overflow: hidden;
+                                      "
+                              >
+                                  {% if cell.input == True %}
+<!--                                    {{ cell.number_format }}-->
+                                    {% if cell.number_format == "General" %}
+                                        <input
+                                                type="text"
+                                                class="cell_input"
+                                                value="{{ cell.value }}"
+                                                data-row="{{cell.row}}"
+                                                data-col="{{cell.col}}"
+                                        >
+                                    {% else %}
+                                        <input
+                                                type="text"
+                                                class="cell_input"
+                                                value="{{ cell.value }}"
+                                                data-row="{{cell.row}}"
+                                                data-col="{{cell.col}}"
+                                        >
+                                    {% endif %}
+                                  {% else %}
+                                    {{ cell.value }}
+                                  {% endif %}
+                              </td>
+                            {% endif %}
+                        {% endif %}
+                      {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+          </table>
+
+
+      </div>
+  {% endfor %}
+  </div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Диққат</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Ёпиш</button>
+      </div>
+    </div>
+  </div>
+</div>
+<input id="active_sheet_id" type="hidden" value="{{ active_sheet_id }}">
+<input id="table_id" type="hidden" value="{{ table }}">
+
+
+
+
+{% endblock content %}
+
+{% block script %}
+
+<script type="text/javascript" src="{% static 'excel_table/js/client_excel_fill.js' %}"></script>
+
+{% endblock script %}
+

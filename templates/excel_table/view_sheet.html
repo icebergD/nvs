@@ -1,0 +1,238 @@
+<style>
+body{
+    margin:0;
+}
+table {
+    border-collapse: collapse;
+    overflow: auto;
+  }
+td, th {
+    padding: 3px;
+    user-select:none;
+  }
+.selected {
+    background-color: #a5cff1!important;
+    border: 1px solid #fff!important;
+}
+.cells__spacer {
+  background: #e6e6e6;
+  position: relative;
+  width: 10px;
+  border: 1px solid grey;
+}
+.cells__spacer:after {
+  content: "";
+  position: absolute;
+  right: 4px;
+  bottom: 4px;
+  height: 80%;
+  width: 100%;
+  background: linear-gradient(135deg, transparent 30px, #bbb 30px, #bbb 55px, transparent 55px);
+}
+.cells__alphabet {
+    font-family: "Noto Sans", sans-serif;
+    color: #444;
+    font-size: 14px;
+  background: #e6e6e6;
+  border: 1px solid grey;
+}
+.cells__number {
+    font-family: "Noto Sans", sans-serif;
+    color: #444;
+    font-size: 14px;
+    background: #e6e6e6;
+    border: 1px solid grey;
+    text-align:center;
+}
+
+/* tabs */
+.chosen-tab{
+    background: #fff!important;
+    border-bottom: 3px solid #217346!important;
+    color:#217346;
+}
+.tabs-line{
+    background: #e6e6e6;
+    width: 100%;
+    height: 30px;
+    padding-left: 40px;
+    border-top: 1px solid #999999;
+    border-bottom: 1px solid #999999;
+    display: flex;
+
+}
+.tabs-line button{
+
+    height: 25px;
+    background: #e6e6e6;
+    border: 1px solid #999999;
+    border-top: 0px;
+    border-bottom: 0px;
+    margin-top:5px;
+
+
+}
+/* end tabs */
+</style>
+
+<h1>{{ sheet.title }}</h1>
+  <div class=" tabs-line">
+    <button class=" tablink chosen-tab" onclick="openTab(event,'London')">London</button>
+    <button class=" tablink" onclick="openTab(event,'Paris')">Paris</button>
+    <button class=" tablink" onclick="openTab(event,'Tokyo')">Tokyo</button>
+  </div>
+
+  <div id="London" class=" tab-body">
+    <h2>London</h2>
+    <p>London is the capital city of England.</p>
+  </div>
+
+  <div id="Paris" class=" tab-body" style="display:none">
+    <h2>Paris</h2>
+    <p>Paris is the capital of France.</p>
+  </div>
+
+  <div id="Tokyo" class=" tab-body" style="display:none">
+    <h2>Tokyo</h2>
+    <p>Tokyo is the capital of Japan.</p>
+  </div>
+
+
+<table>
+    <thead>
+        <tr>
+            <th class="cells__spacer"></th>
+            {% for el in char_line %}
+                <th style="width:{{ el.col_width }}pt" class="cells__alphabet">{{ el.col_value }}</th>
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in sheet %}
+            <tr>
+              {% for cell in row %}
+                {% if cell.exists == True %}
+                    <th style="height:{{ el.row_height }}pt" class="cells__number">{{ cell.row_value }}</th>
+                {% else %}
+                    {% if cell.visable == True %}
+                      <td
+                              data-row="{{cell.row}}"
+                              data-col="{{cell.col}}"
+                              class="cell"
+                              rowspan="{{ cell.rowspan }}"
+                              colspan="{{ cell.colspan }}"
+                              data-visable="{{cell.visable}}"
+                              style="
+                                    background:{{ cell.background_color }};
+                                    border-top: solid {{cell.border_top}}px {{cell.border_top_color}};
+                                    border-right: solid {{cell.border_right}}px {{cell.border_right_color}};
+                                    border-bottom: solid {{cell.border_bottom}}px {{cell.border_bottom_color}};
+                                    border-left: solid {{cell.border_left}}px {{cell.border_left_color}};
+                                    font-family: {{ cell.font_name }}, Times, serif;
+                                    font-size: {{ cell.font_size }}px;
+                                    color: {{ cell.font_color }};
+                                    {% if cell.font_bold == True %}
+                                        font-weight: bold;
+                                    {% endif %}
+                                    {% if cell.font_italic == True %}
+                                        font-style: italic;
+                                    {% endif %}
+                                    text-align: {{ cell.horizontal_align }};
+                                    vertical-align: {{ cell.vertical_align }};
+                                    {% if cell.wrap_text == True %}
+                                        overflow: visible;
+                                    {% endif %}
+                              "
+                      >
+                              {{ cell.value }}
+                      </td>
+                    {% endif %}
+                {% endif %}
+              {% endfor %}
+            </tr>
+        {% endfor %}
+    </tbody>
+
+</table>
+
+<script type="text/javascript">
+    let isSelecting = false;
+    let startRow, startCol;
+    let selectedCells = [];
+
+    document.addEventListener('mousedown', (event) => {
+      const cell = event.target;
+      if (cell.nodeName === 'TD') {
+        isSelecting = true;
+        startRow = parseInt(cell.getAttribute("data-row"));//parseInt(cell.id.split('-')[0]);
+        startCol = parseInt(cell.getAttribute("data-col"));//parseInt(cell.id.split('-')[1]);
+        selectCells(startRow, startCol, startRow, startCol, event.ctrlKey);
+      }
+    });
+
+    document.addEventListener('mousemove', (event) => {
+      if (isSelecting && event.buttons === 1) {
+        const cell = event.target;
+        if (cell.nodeName === 'TD') {
+          const endRow = parseInt(cell.getAttribute("data-row"));//parseInt(cell.id.split('-')[0]);
+          const endCol = parseInt(cell.getAttribute("data-col"));//parseInt(cell.id.split('-')[1]);
+          selectCells(startRow, startCol, endRow, endCol, event.ctrlKey);
+        }
+      }
+    });
+
+    document.addEventListener('mouseup', () => {
+      isSelecting = false;
+      const selectedCellIds = getSelectedCellIds();
+      console.log(selectedCellIds);
+    });
+
+    function selectCells(startRow, startCol, endRow, endCol, isAdditiveSelection) {
+      if (!isAdditiveSelection) {
+        // Clear previous selections
+        selectedCells.forEach(cell => cell.classList.remove('selected'));
+        selectedCells = [];
+      }
+
+      for (let row = Math.min(startRow, endRow); row <= Math.max(startRow, endRow); row++) {
+        for (let col = Math.min(startCol, endCol); col <= Math.max(startCol, endCol); col++) {
+          //const cell = document.getElementById(`${row}-${col}`);
+          const cell = document.querySelector('td[data-row="' + row + '"][data-col="' + col + '"]');
+          if (!selectedCells.includes(cell)) {
+            cell.classList.add('selected');
+            selectedCells.push(cell);
+          }
+        }
+      }
+    }
+
+<!--    function getSelectedCellIds() {-->
+<!--      const selectedIds = selectedCells.map(cell => cell.id);-->
+<!--      return selectedIds;-->
+<!--    }-->
+    function getSelectedCellIds() {
+      const selectedIds = selectedCells.map(cell => ({ row: cell.getAttribute("data-row"), col: cell.getAttribute("data-col") }));
+      return selectedIds;
+    }
+
+    function openTab(evt, tabNum) {
+      var i, x, tablinks;
+      x = document.getElementsByClassName("tab-body");
+      for (i = 0; i < x.length; i++) {
+        x[i].style.display = "none";
+      }
+      tablinks = document.getElementsByClassName("tablink");
+      for (i = 0; i < x.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" chosen-tab", "");
+      }
+      document.getElementById(tabNum).style.display = "block";
+      evt.currentTarget.className += " chosen-tab";
+    }
+
+    function showIt(row, col) {
+        const el = document.querySelector('td[data-row="' + row + '"][data-col="' + col + '"]');
+        //var el = document.getElementById(elID);
+        el.scrollIntoView(true);
+    }
+    //showIt(15, 14);
+</script>

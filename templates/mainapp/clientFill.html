@@ -1,0 +1,62 @@
+
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<div class="container">
+
+    <h1 class="mt-3">{{ table_name }}</h1>
+    <p>{{ table_description }}</p>
+
+    <form action="{% url 'client-send' %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" value="{{ permision_id }}" name="permision_id">
+        <input type="hidden" value="{{ table_id }}" name="table_id">
+        {% for field_el in fields %}
+        <hr>
+            <div class="mb-3">
+                <label for="id{{ field_el.id }}" class="form-label">
+                    {{ field_el.name }}
+                    {% if field_el.required == True %}<span class="must">*</span>{% endif %}
+                </label>
+                <div class="mb-3 form-text">
+                    {{ field_el.description }}
+                </div>
+<!--                required="required"-->
+                {% if field_el.f_type == 't' %}
+                    {% if field_el.required == True %}
+                        <input type="text" class="form-control" id="id{{ field_el.id }}" required name="id{{ field_el.id }}">
+                    {% else %}
+                        <input type="text" class="form-control" id="id{{ field_el.id }}" name="id{{ field_el.id }}">
+                    {% endif %}
+
+                {% elif field_el.f_type == 'i' %}
+                    {% if field_el.required == True %}
+                        <input type="number" class="form-control" step="1" id="id{{ field_el.id }}" required name="id{{ field_el.id }}">
+                    {% else %}
+                        <input type="number" class="form-control" step="1" id="id{{ field_el.id }}" name="id{{ field_el.id }}">
+                    {% endif %}
+
+                {% elif field_el.f_type == 'f' %}
+                    {% if field_el.required == True %}
+                        <input type="number" class="form-control" step="0.01" id="id{{ field_el.id }}" required name="id{{ field_el.id }}">
+                    {% else %}
+                        <input type="number" class="form-control" step="0.01" id="id{{ field_el.id }}" name="id{{ field_el.id }}">
+                    {% endif %}
+
+                {% endif %}
+
+            </div>
+
+        {% endfor %}
+        <button type="submit" class="btn btn-primary">Юбориш</button>
+    </form>
+    <form>
+
+
+
+    </form>
+</div>
+
+{% endblock content %}

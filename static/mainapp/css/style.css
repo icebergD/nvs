@@ -1,0 +1,213 @@
+body {
+	background-color: #eee;
+}
+/* список форм */
+.forms-table{
+    margin-top: 30px;
+    display: block;
+    margin-left: 40px;
+    margin-right: 40px;
+}
+
+/* конструктор форм */
+#title {
+	box-shadow: 0px 8px 7px #808080 ;
+	background-color:white;
+	padding: 16px;
+	font-family: 'Poppins', sans-serif;
+	text-align: left;
+	border-radius: 10px;
+	border-top: 10px solid #4c0a91;
+}
+.form-box {
+	box-shadow: 10px 10px 7px #808080 ;
+	background-color:white;
+	padding: 16px;
+	font-family: 'Poppins', sans-serif;
+	text-align: left;
+	border-radius: 10px;
+    margin-bottom: 30px;
+}
+
+.create-btn {
+	width: 30%;
+	margin: 8px 0;
+}
+.modal-btn {
+	box-shadow: 7px 7px 7px #808080 ;
+	width: 70px;
+	height: 70px;
+	padding: 14px 20px;
+	margin: 10px 50%;
+	border: none;
+	border-radius: 50%;
+}
+.must {
+	font-family: 'Poppins', sans-serif;
+	text-align: left;
+	color: red;
+}
+#main {
+	height: 80%;
+	padding: 200px;
+}
+/*configureTable*/
+.multiple_select {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+.option_container {
+  width: 100%;
+}
+.option_container select {
+  width: 100%;
+}
+.box_buttons {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.select-box{
+    height: 500px;
+}
+/*openTable*/
+.table-wraper{
+    max-height: 80vh;
+    overflow: scroll;
+}
+.my-table tr{
+    text-align: center;
+    vertical-align: middle;
+}
+.my-card-header{
+    display: flex;
+    direction: column;
+    justify-content: space-between;
+}
+/* tableGenerator */
+#md_add_table{
+  margin: 20px 0 30px 20px;
+}
+#md-table-info{
+  color: #888;
+  font-size: 11px;
+  font-family: Verdana;
+}
+#md-table-gen-wrap{
+  display: none;
+  padding: 6px;
+  background: #ffffff;
+  border: 1px solid #888;
+  z-index: 3;
+}
+.SizeChooser table {
+  border-collapse: separate;
+  border-spacing: 3px;
+}
+.SizeChooser td {
+  cursor: pointer;
+  border: 1px #ccc solid;
+  height: 16px;
+  min-width: 16px;
+  line-height: 10px;
+}
+.SizeChooser-selected {
+  border: 1px #333 solid !important;
+}
+.SizeChooser-hover {
+  background-color: #DEF;
+}
+#table-generator th,#table-generator td {
+   border: 1px solid #eee;
+}
+#table-generator td{
+    margin:0;
+    padding:0;
+}
+#table-generator tr{
+    margin:0;
+    padding:0;
+}
+#table-generator input{
+    word-break: break-all;
+    margin:0;
+    padding:0;
+    padding-left:10px;
+    border: none;
+}
+.table-wraper-gen{
+    height: 70vh;
+    overflow: scroll;
+}
+.table-num-col{
+    width:60px;
+}
+.dropdown-custom{
+    transform: translate(0px, 40px)!important;
+}
+.table-field-none{
+    display: none;
+}
+.table-dropdown-menu{
+    z-index: 5;
+    overflow:visible;
+}
+.field-dropdown{
+    position: absolute;
+    right:0;
+}
+.my-btn-group{
+    width:100%;
+}
+#table-generator-body td input{
+    min-width:200px;
+}
+.my-dropdown-toggle{
+    width:30px;
+}
+.tool-panel{
+    display: flex;
+    flex-direction:row;
+    align-items:center;
+}
+.table-name{
+    width: 300px;
+    height: 40px;
+    margin-left:20px;
+}
+.my-required-btn{
+    display:flex;
+    flex-direction: row;
+}
+.selected-dropdown{
+    background: #a0aeb8;
+}
+.panel-header{
+    display: flex;
+    justify-content: space-between;
+}
+.list-group-item{
+    margin: 10px;
+}
+.list-group-item p, a{
+    word-wrap: break-word;
+}
+.list-group-item div{
+    position: relative;
+    width: 100%;
+}
+.list-group-item div span{
+    position:absolute;
+    bottom: 10px;
+    right: 10px;
+}
+/* скол таблиц */
+.scrollbar-table{
+    height:20px;
+    width:100%;
+    overflow: auto;
+    position: sticky;
+    top: 50px;
+}
+

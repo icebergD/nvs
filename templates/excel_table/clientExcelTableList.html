@@ -1,0 +1,64 @@
+
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+  <ul class="list-group">
+        {% for el in table %}
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+
+                <div>
+                    {% if el.status == "-" %}
+                    <h5><p><a href="client-excel-fill/{{ el.id }}">{{ el.name }}</a></p></h5>
+                    {% else %}
+                    <h5><p>{{ el.name }}</p></h5>
+                    {% endif %}
+                    <p>{{ el.description }}</p>
+                    <p>Жадвал яратувчиси: {{ el.creator }} </p>
+                    <p>{{ el.created }}</p>
+                    <span class="badge {{ el.status_color }}">{{ el.status }}</span>
+                </div>
+
+
+          </li>
+        {% endfor %}
+  </ul>
+
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Ўчириш</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Ҳақиқатан ҳам оʻчириб ташламоқчимисиз?<br>
+        Кейин қайта тиклай олмайсиз.
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Ёпиш</button>
+        <form>
+         {% csrf_token %}
+          <button formaction="{% url 'delite-table' %}" formmethod="post" type="submit" class="btn btn-outline-danger delet-btn-final" name="val">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
+              <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
+            </svg>
+            Ўчириш
+          </button>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+{% endblock content %}
+
+

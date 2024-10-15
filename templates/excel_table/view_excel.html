@@ -1,0 +1,6 @@
+<h1>{{ excel.file.name }}</h1>
+<ul>
+{% for sheet in sheets %}
+    <li><a href="{% url 'view_sheet' pk=excel.pk sheet_name=sheet %}">{{ sheet }}</a></li>
+{% endfor %}
+</ul>

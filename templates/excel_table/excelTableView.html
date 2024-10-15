@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+{% load static %}
+{% block style %}
+
+<link href="{% static 'excel_table/css/style.css' %}" rel="stylesheet" type="text/css">
+{% endblock style %}
+{% block content %}
+
+  <div class="tabs-line">
+    <div class="tabs-buttons">
+        {% for el in sheets %}
+        <button data-tab-id="{{ el.id }}" class=" tablink {% if el.sheet_name == active_sheet %} chosen-tab {% endif %}" onclick="openTab(event,'{{ el.id }}')">{{ el.sheet_name }}</button>
+        {% endfor %}
+    </div>
+
+    <form>
+           {% csrf_token %}
+          <button formmethod="post" type="submit" class="btn btn-outline-primary save-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-filetype-xlsx" viewBox="0 0 16 16">
+              <path fill-rule="evenodd" d="M14 4.5V11h-1V4.5h-2A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v9H2V2a2 2 0 0 1 2-2h5.5L14 4.5ZM7.86 14.841a1.13 1.13 0 0 0 .401.823c.13.108.29.192.479.252.19.061.411.091.665.091.338 0 .624-.053.858-.158.237-.105.416-.252.54-.44a1.17 1.17 0 0 0 .187-.656c0-.224-.045-.41-.135-.56a1.002 1.002 0 0 0-.375-.357 2.028 2.028 0 0 0-.565-.21l-.621-.144a.97.97 0 0 1-.405-.176.37.37 0 0 1-.143-.299c0-.156.061-.284.184-.384.125-.101.296-.152.513-.152.143 0 .266.023.37.068a.624.624 0 0 1 .245.181.56.56 0 0 1 .12.258h.75a1.093 1.093 0 0 0-.199-.566 1.21 1.21 0 0 0-.5-.41 1.813 1.813 0 0 0-.78-.152c-.293 0-.552.05-.777.15-.224.099-.4.24-.527.421-.127.182-.19.395-.19.639 0 .201.04.376.123.524.082.149.199.27.351.367.153.095.332.167.54.213l.618.144c.207.049.36.113.462.193a.387.387 0 0 1 .153.326.512.512 0 0 1-.085.29.558.558 0 0 1-.255.193c-.111.047-.25.07-.413.07-.117 0-.224-.013-.32-.04a.837.837 0 0 1-.249-.115.578.578 0 0 1-.255-.384h-.764Zm-3.726-2.909h.893l-1.274 2.007 1.254 1.992h-.908l-.85-1.415h-.035l-.853 1.415H1.5l1.24-2.016-1.228-1.983h.931l.832 1.438h.036l.823-1.438Zm1.923 3.325h1.697v.674H5.266v-3.999h.791v3.325Zm7.636-3.325h.893l-1.274 2.007 1.254 1.992h-.908l-.85-1.415h-.035l-.853 1.415h-.861l1.24-2.016-1.228-1.983h.931l.832 1.438h.036l.823-1.438Z"/>
+            </svg>
+            Юклаш
+          </button>
+    </form>
+<!--    <button type="button" class="btn btn-primary btn-sm save-btn">Сақлаш</button>-->
+  </div>
+  <div class="tabs-bufer"></div>
+  <div class="scrollbar-table"><div class="scrollbar-content"></div></div>
+  <div class="tab-body-wrap">
+  {% for sheet_el in sheets %}
+      <div id="{{ sheet_el.id }}"  {% if sheet_el.sheet_name != active_sheet %} class="tab-body" style="display:none" {% else %} class="chosen-tab-body tab-body" {% endif %}>
+
+          <table>
+            <thead>
+                <tr>
+                    <th class="cells__spacer"></th>
+                    {% for el in sheet_el.char_line %}
+                    <th style="width:{{ el.col_width }}pt" class="cells__alphabet">{{ el.col_value }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for row in sheet_el.sheet %}
+                    <tr>
+                      {% for cell in row %}
+
+                        {% if cell.exists == True %}
+
+                        <th class="cells__number"><div style="height:{{ el.row_height }}pt">{{ cell.row_value }}</div></th>
+                        {% else %}
+                            {% if cell.visable == True %}
+                              <td
+                                      data-row="{{cell.row}}"
+                                      data-col="{{cell.col}}"
+                                      class="cell"
+                                      rowspan="{{ cell.rowspan }}"
+                                      colspan="{{ cell.colspan }}"
+                                      data-visable="{{cell.visable}}"
+                                      style="
+                                            background:{{ cell.background_color }};
+                                            border-top: solid {{cell.border_top}}px {{cell.border_top_color}};
+                                            border-right: solid {{cell.border_right}}px {{cell.border_right_color}};
+                                            border-bottom: solid {{cell.border_bottom}}px {{cell.border_bottom_color}};
+                                            border-left: solid {{cell.border_left}}px {{cell.border_left_color}};
+                                            font-family: {{ cell.font_name }}, Times, serif;
+                                            font-size: {{ cell.font_size }}px;
+                                            color: {{ cell.font_color }};
+                                            {% if cell.font_bold == True %}
+                                                font-weight: bold;
+                                            {% endif %}
+                                            {% if cell.font_italic == True %}
+                                                font-style: italic;
+                                            {% endif %}
+                                            text-align: {{ cell.horizontal_align }};
+                                            vertical-align: {{ cell.vertical_align }};
+<!--                                            {% if cell.wrap_text == True %}-->
+<!--                                                overflow: visible;-->
+<!--                                            {% endif %}-->
+                                            overflow: hidden;
+                                      "
+                              >
+                                    {{ cell.value }}
+                              </td>
+                            {% endif %}
+                        {% endif %}
+                      {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+          </table>
+
+
+      </div>
+  {% endfor %}
+  </div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Диққат</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Ёпиш</button>
+      </div>
+    </div>
+  </div>
+</div>
+<input id="active_sheet_id" type="hidden" value="{{ active_sheet_id }}">
+
+
+
+
+{% endblock content %}
+
+{% block script %}
+
+<script type="text/javascript" src="{% static 'excel_table/js/excel_table_view.js' %}"></script>
+
+{% endblock script %}
+

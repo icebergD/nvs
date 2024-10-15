@@ -1,0 +1,84 @@
+# Python specific #
+###################
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+.Python
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+pip-log.txt
+pip-delete-this-directory.txt
+# macOS
+.DS_Store
+
+# Virtual environments
+*.env
+*.venv
+*.virtualenv
+.env
+
+# Django specific #
+###################
+
+# Django migrations
+*/migrations/*
+!*/migrations/__init__.py
+
+# Database files
+*.sqlite3
+*.db
+
+# Static and media files
+staticfiles/
+media/
+
+# Local settings
+local_settings.py
+settings_local.py
+
+# Log files
+*.log
+*.out
+*.err
+
+# Coverage reports
+htmlcov/
+.tox/
+.nox/
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+nosetests.xml
+pylint-report.txt
+pylint-results.xml
+
+# IDEs and editors
+###################
+
+# VS Code
+.vscode/
+
+# JetBrains (PyCharm, etc.)
+.idea/
+
+# Sublime Text
+*.sublime*
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Other #
+#########
+
+# Any secret or config files (customize as needed)
+*.key
+*.pem
+config.yaml
